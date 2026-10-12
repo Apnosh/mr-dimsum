@@ -221,6 +221,15 @@
   margin-top: 32px;
 }
 
+.inquiry-form__status {
+  font-family: var(--font-ui);
+  font-size: 0.9375rem;
+  color: var(--brown);
+  margin-top: 16px;
+  min-height: 22px;
+}
+.inquiry-form__status.is-error { color: var(--red); }
+
 .inquiry-form__error {
   font-family: var(--font-ui);
   font-size: 0.8125rem;
@@ -470,7 +479,7 @@
     </div>
 
     <!-- EVENT INQUIRY FORM -->
-    <form class="inquiry-form reveal" id="inquiryForm" action="mailto:info@mrdimsumusa.com" method="POST" enctype="text/plain" novalidate>
+    <form class="inquiry-form reveal" id="inquiryForm" novalidate>
       <div class="inquiry-form__row">
         <div class="inquiry-form__group">
           <label class="inquiry-form__label" for="inquiry-name">Name</label>
@@ -509,7 +518,8 @@
         </div>
       </div>
       <div class="inquiry-form__submit">
-        <button type="submit" class="btn btn--gold">Submit Inquiry</button>
+        <button type="submit" class="btn btn--gold" id="inquirySubmit">Submit Inquiry</button>
+        <p class="inquiry-form__status" id="inquiryStatus" role="status"></p>
       </div>
     </form>
   </div>
@@ -617,6 +627,7 @@
   <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
 </button>
 
+<script src="forms.js"></script>
 <script>
 // Mobile menu
 function toggleMenu() {
@@ -734,13 +745,34 @@ if (form) {
       }
     });
 
+    e.preventDefault();
     if (!valid) {
-      e.preventDefault();
       // Focus first error field
       const firstError = form.querySelector('.has-error .inquiry-form__input, .has-error .inquiry-form__textarea');
       if (firstError) firstError.focus();
+      return;
     }
+
+    // Send to the restaurant's inbox in the Apnosh portal (forms.js)
+    const btn = document.getElementById('inquirySubmit');
+    const status = document.getElementById('inquiryStatus');
+    status.classList.remove('is-error');
+    status.textContent = '';
+    btn.disabled = true;
+    btn.textContent = 'Sending\u2026';
+    MDSForms.send(form, 'reservation').then(function(result) {
+      btn.disabled = false;
+      btn.textContent = 'Submit Inquiry';
+      if (result.ok) {
+        form.reset();
+        status.textContent = 'Thank you! We got your inquiry and will be in touch soon.';
+      } else {
+        status.classList.add('is-error');
+        status.textContent = result.error;
+      }
+    });
   });
+  MDSForms.prepare(form);
 }
 </script>
 

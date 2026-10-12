@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rate Your Visit | Mr. Dim Sum</title>
+<meta name="description" content="Tell Mr. Dim Sum how your visit went. Your review goes straight to our team and is never posted publicly.">
+<!-- In-store QR destination: keep it out of search results -->
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Italianno&family=Gowun+Batang:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+.review-page {
+  padding: 32px 16px 64px;
+  min-height: 80vh;
+}
+.review-logo {
+  display: block;
+  width: 180px;
+  margin: 0 auto 28px;
+}
+.review-card {
+  max-width: 520px;
+  margin: 0 auto;
+  background: var(--white);
+  border: var(--hairline);
+  border-radius: 20px;
+  padding: 36px 28px;
+  box-shadow: 0 10px 40px rgba(61,43,31,0.06);
+}
+.review-card h1 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 3rem;
+  line-height: 1;
+  color: var(--brown);
+  text-align: center;
+}
+.review-card__sub {
+  font-family: var(--font-body);
+  color: var(--gray-500);
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  text-align: center;
+  margin: 10px auto 28px;
+  max-width: 360px;
+}
+
+/* STARS — radios in reverse order so "this star and the ones before it" light up with ~ */
+.stars {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  gap: 2px;
+}
+.stars input { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.stars label { cursor: pointer; padding: 4px; line-height: 0; transition: transform 0.15s ease; }
+.stars label svg { width: 26px; height: 26px; fill: var(--gray-300); transition: fill 0.15s ease; }
+.stars input:checked ~ label svg { fill: var(--gold); }
+@media (hover: hover) {
+  .stars label:hover svg, .stars label:hover ~ label svg { fill: var(--gold); }
+  .stars label:hover { transform: scale(1.12); }
+}
+.stars input:focus-visible + label { outline: 2px solid var(--gold); outline-offset: 2px; border-radius: 6px; }
+.stars--big { justify-content: center; gap: 6px; }
+.stars--big label svg { width: 46px; height: 46px; }
+.rating-hint {
+  font-family: var(--font-ui);
+  font-size: 0.875rem;
+  color: var(--brown-light);
+  text-align: center;
+  min-height: 22px;
+  margin-top: 8px;
+}
+
+.review-section { margin-top: 28px; }
+.review-label {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--brown);
+  margin-bottom: 12px;
+}
+.review-label span { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--gray-500); }
+
+.detail-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: var(--hairline);
+}
+.detail-row:last-child { border-bottom: none; }
+.detail-row__name { font-family: var(--font-ui); font-size: 0.9375rem; color: var(--gray-700); }
+
+.chips { display: flex; gap: 10px; flex-wrap: wrap; }
+.chips input { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.chips label {
+  font-family: var(--font-ui);
+  font-size: 0.875rem;
+  color: var(--brown);
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(213,182,134,0.5);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+.chips input:checked + label { background: var(--gold-light); border-color: var(--gold); }
+.chips input:focus-visible + label { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+.review-field { margin-bottom: 12px; }
+.review-field input, .review-field textarea {
+  width: 100%;
+  background: var(--warm-bg-alt);
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-family: var(--font-ui);
+  font-size: 1rem; /* 16px so iPhones don't zoom in */
+  color: var(--charcoal);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.review-field textarea { min-height: 130px; resize: vertical; line-height: 1.45; }
+.review-field input:focus, .review-field textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(213,182,134,0.15); }
+.review-field input::placeholder, .review-field textarea::placeholder { color: var(--gray-500); opacity: 0.75; }
+
+.review-private {
+  font-family: var(--font-ui);
+  font-size: 0.8125rem;
+  color: var(--gray-500);
+  text-align: center;
+  line-height: 1.4;
+  margin: 24px 0 16px;
+}
+.review-submit { width: 100%; justify-content: center; }
+.review-submit[disabled] { opacity: 0.6; cursor: default; transform: none; }
+.review-error {
+  font-family: var(--font-ui);
+  font-size: 0.875rem;
+  color: var(--red);
+  text-align: center;
+  margin-top: 12px;
+  min-height: 20px;
+}
+
+.review-thanks { display: none; text-align: center; padding: 12px 0; }
+.review-thanks.is-visible { display: block; }
+.review-thanks__icon {
+  width: 64px; height: 64px; margin: 0 auto 16px;
+  border-radius: 50%;
+  background: var(--gold-light);
+  display: flex; align-items: center; justify-content: center;
+}
+.review-thanks__icon svg { width: 30px; height: 30px; stroke: var(--gold-dark); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.review-thanks p { font-family: var(--font-body); color: var(--gray-500); font-size: 0.9375rem; line-height: 1.5; margin: 10px auto 24px; max-width: 340px; }
+
+@media (max-width: 480px) {
+  .review-card { padding: 28px 18px; border-radius: 16px; }
+  .stars--big label svg { width: 42px; height: 42px; }
+}
+</style>
+</head>
+
+<body>
+
+<main class="review-page">
+  <a href="index.html" aria-label="Mr. Dim Sum, Home"><img src="pictures/mrdimsum-logo.png" alt="Mr. Dim Sum" class="review-logo"></a>
+
+  <div class="review-card">
+    <form id="reviewForm" novalidate>
+      <h1>How was your visit?</h1>
+      <p class="review-card__sub">Your review goes straight to our team. It&rsquo;s private and never posted online.</p>
+
+      <div class="stars stars--big" role="radiogroup" aria-label="Overall rating">
+        <input type="radio" id="rating5" name="rating" value="5" required><label for="rating5" aria-label="Overall rating: 5 stars"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></label>
+        <input type="radio" id="rating4" name="rating" value="4"><label for="rating4" aria-label="Overall rating: 4 stars"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></label>
+        <input type="radio" id="rating3" name="rating" value="3"><label for="rating3" aria-label="Overall rating: 3 stars"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></label>
+        <input type="radio" id="rating2" name="rating" value="2"><label for="rating2" aria-label="Overall rating: 2 stars"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></label>
+        <input type="radio" id="rating1" name="rating" value="1"><label for="rating1" aria-label="Overall rating: 1 star"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></label>
+      </div>
+      <div class="rating-hint" id="ratingHint" aria-live="polite">Tap a star to rate</div>
+
+      <div class="review-section">
+        <span class="review-label">Rate the details <span>(optional)</span></span>
+        <div class="detail-row">
+          <span class="detail-row__name">Food</span>
+          <div class="stars" role="radiogroup" aria-label="Food">
+            <input type="radio" id="food5" name="food" value="5"><label for="food5" aria-label="Food: 5 stars"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></label>
+            <input type="radio" id="food4" name="food" value="4"><label for="food4" aria-label="Food: 4 stars"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></label>
+            <input type="radio" id="food3" name="food" value="3"><label for="food3" aria-label="Food: 3 stars"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></label>
+            <input type="radio" id="food2" name="food" value="2"><label for="food2" aria-label="Food: 2 stars"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></label>
+            <input type="radio" id="food1" name="food" value="1"><label for="food1" aria-label="Food: 1 star"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></label>
+          </div>
+        </div>
+        <div class="detail-row">
+          <span class="detail-row__name">Service</span>
+          <div class="stars" role="radiogroup" aria-label="Service">
+            <input type="radio" id="service5" name="service" value="5"><label for="service5" aria-label="Service: 5 stars"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></label>
+            <input type="radio" id="service4" name="service" value="4"><label for="service4" aria-label="Service: 4 stars"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></label>
+            <input type="radio" id="service3" name="service" value="3"><label for="service3" aria-label="Service: 3 stars"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></label>
+            <input type="radio" id="service2" name="service" value="2"><label for="service2" aria-label="Service: 2 stars"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></label>
+            <input type="radio" id="service1" name="service" value="1"><label for="service1" aria-label="Service: 1 star"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></label>
+          </div>
+        </div>
+        <div class="detail-row">
+          <span class="detail-row__name">Atmosphere</span>
+          <div class="stars" role="radiogroup" aria-label="Atmosphere">
+            <input type="radio" id="atmosphere5" name="atmosphere" value="5"><label for="atmosphere5" aria-label="Atmosphere: 5 stars"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></label>
+            <input type="radio" id="atmosphere4" name="atmosphere" value="4"><label for="atmosphere4" aria-label="Atmosphere: 4 stars"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></label>
+            <input type="radio" id="atmosphere3" name="atmosphere" value="3"><label for="atmosphere3" aria-label="Atmosphere: 3 stars"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></label>
+            <input type="radio" id="atmosphere2" name="atmosphere" value="2"><label for="atmosphere2" aria-label="Atmosphere: 2 stars"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></label>
+            <input type="radio" id="atmosphere1" name="atmosphere" value="1"><label for="atmosphere1" aria-label="Atmosphere: 1 star"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-section">
+        <span class="review-label" id="diningLabel">How did you dine? <span>(optional)</span></span>
+        <div class="chips" role="radiogroup" aria-labelledby="diningLabel">
+          <input type="radio" id="dineIn" name="dining" value="Dine in"><label for="dineIn">Dine in</label>
+          <input type="radio" id="takeout" name="dining" value="Takeout"><label for="takeout">Takeout</label>
+        </div>
+      </div>
+
+      <div class="review-section">
+        <label class="review-label" for="message">Tell us more <span>(optional)</span></label>
+        <div class="review-field">
+          <textarea id="message" name="message" maxlength="3000" placeholder="What did you love? What could we do better?"></textarea>
+        </div>
+      </div>
+
+      <div class="review-section">
+        <span class="review-label">Want us to reply? <span>(optional)</span></span>
+        <div class="review-field"><input type="text" name="name" autocomplete="name" aria-label="Your name" placeholder="Your name"></div>
+        <div class="review-field"><input type="email" name="email" autocomplete="email" aria-label="Email" placeholder="Email"></div>
+        <div class="review-field"><input type="tel" name="phone" autocomplete="tel" aria-label="Phone" placeholder="Phone"></div>
+      </div>
+
+      <p class="review-private">Only the Mr. Dim Sum team will see this.</p>
+      <button type="submit" class="btn btn--gold review-submit" id="reviewSubmit">Send review</button>
+      <div class="review-error" id="reviewError" role="alert"></div>
+    </form>
+
+    <div class="review-thanks" id="reviewThanks">
+      <div class="review-thanks__icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <h1>Thank you!</h1>
+      <p>We read every review, and yours helps us make the next visit even better.</p>
+      <a href="menu.html" class="btn btn--gold">See our menu</a>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <img src="pictures/mrdimsum-logo.png" alt="Mr. Dim Sum" class="footer__brand-logo">
+        <p>More than dim sum, it's a way of life. Handmade Cantonese dim sum served all day at Westfield Southcenter Mall.</p>
+      </div>
+      <div>
+        <h4>Navigate</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="menu.html">Menu</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="reservations.html">Reservations</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="feedback.html">Feedback</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Hours</h4>
+        <ul>
+          <li><a href="contact.html">Mon&ndash;Sat: 10am&ndash;9pm</a></li>
+          <li><a href="contact.html">Sunday: 10am&ndash;8pm</a></li>
+        </ul>
+        <h4 style="margin-top:24px;">Contact</h4>
+        <ul>
+          <li><a href="mailto:info@mrdimsumusa.com">info@mrdimsumusa.com</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Location</h4>
+        <address>
+          973 Southcenter Mall<br>
+          Tukwila, WA 98188
+        </address>
+        <p style="margin-top:12px;font-size:0.875rem"><a href="https://maps.google.com/?q=973+Southcenter+Mall+Tukwila+WA+98188" target="_blank" rel="noopener">Get Directions</a></p>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>&copy; 2026 Mr. Dim Sum. All rights reserved.</span>
+      <div class="footer__socials">
+        <a href="https://instagram.com/mrdimsumusa" target="_blank" rel="noopener" aria-label="Follow Mr. Dim Sum on Instagram">
+          <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        </a>
+        <a href="mailto:info@mrdimsumusa.com" aria-label="Email Mr. Dim Sum">
+          <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<script src="forms.js"></script>
+<script>
+var form = document.getElementById('reviewForm');
+var hint = document.getElementById('ratingHint');
+var submitBtn = document.getElementById('reviewSubmit');
+var errorBox = document.getElementById('reviewError');
+var HINTS = { 1: 'Poor', 2: 'Fair', 3: 'Good', 4: 'Great', 5: 'Excellent' };
+
+MDSForms.prepare(form);
+
+form.querySelectorAll('input[name="rating"]').forEach(function (input) {
+  input.addEventListener('change', function () {
+    hint.textContent = HINTS[this.value];
+    errorBox.textContent = '';
+  });
+});
+
+form.addEventListener('submit', function (e) {
+  e.preventDefault();
+  if (!form.querySelector('input[name="rating"]:checked')) {
+    errorBox.textContent = 'Please tap a star rating first.';
+    form.querySelector('.stars--big').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+  var email = form.querySelector('input[name="email"]');
+  if (email.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+    errorBox.textContent = 'That email doesn\u2019t look right. Fix it or leave it blank.';
+    email.focus();
+    return;
+  }
+
+  errorBox.textContent = '';
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Sending\u2026';
+  MDSForms.send(form, 'feedback', { source: 'In-store review (QR code)' }).then(function (result) {
+    if (result.ok) {
+      form.style.display = 'none';
+      document.getElementById('reviewThanks').classList.add('is-visible');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      errorBox.textContent = result.error;
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Send review';
+    }
+  });
+});
+</script>
+</body>
+</html>
