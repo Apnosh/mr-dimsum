@@ -132,6 +132,7 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
 .nav__links-right { justify-content: flex-start; }
 
 .nav__links-left a, .nav__links-right a {
+  white-space: nowrap;
   font-family: var(--font-ui);
   font-size: 0.8125rem;
   font-weight: 500;
@@ -1025,6 +1026,14 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
 /* ============================================
    RESPONSIVE
    ============================================ */
+/* Tablet: six nav links + logo need ~885px; switch to the hamburger below that */
+@media (max-width: 900px) {
+  .nav__inner { grid-template-columns: 1fr auto auto; }
+  .nav__links-left, .nav__links-right { display: none; }
+  .nav__logo { justify-self: start; padding: 0; }
+  .nav__hamburger { display: flex; }
+}
+
 @media (max-width: 768px) {
   :root { --nav-height: 64px; }
 
@@ -1152,6 +1161,7 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
       <img src="pictures/mrdimsum-logo.png" alt="Mr. Dim Sum" class="nav__logo-img">
     </a>
     <ul class="nav__links-right">
+      <li><a href="https://pos.chowbus.com/online-ordering/store/MR.-DIM-SUM/50881" target="_blank" rel="noopener">Order Online</a></li>
       <li><a href="reservations.html">Reservations</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
@@ -1169,6 +1179,7 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
   <a href="index.html" onclick="closeMenu()">Home</a>
   <a href="menu.html" onclick="closeMenu()">Menu</a>
   <a href="about.html" onclick="closeMenu()">About</a>
+  <a href="https://pos.chowbus.com/online-ordering/store/MR.-DIM-SUM/50881" target="_blank" rel="noopener" onclick="closeMenu()">Order Online</a>
   <a href="reservations.html" onclick="closeMenu()">Reservations</a>
   <a href="contact.html" onclick="closeMenu()">Contact</a>
 </div>

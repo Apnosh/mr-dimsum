@@ -137,6 +137,7 @@ button:focus-visible,
 
 .nav__links-left a,
 .nav__links-right a {
+  white-space: nowrap;
   font-family: var(--font-ui);
   font-size: 0.8125rem;
   font-weight: 500;
@@ -267,6 +268,14 @@ button:focus-visible,
 }
 .nav__mobile-menu a.is-active {
   color: var(--red);
+}
+
+/* Tablet: six nav links + logo need ~885px; switch to the hamburger below that */
+@media (max-width: 900px) {
+  .nav__inner { grid-template-columns: 1fr auto auto; }
+  .nav__links-left, .nav__links-right { display: none; }
+  .nav__logo { justify-self: start; padding: 0; }
+  .nav__hamburger { display: flex; }
 }
 
 @media (max-width: 768px) {

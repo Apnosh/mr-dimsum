@@ -210,6 +210,7 @@ body::after {
 .nav__links-right { justify-content: flex-start; }
 
 .nav__links-left a, .nav__links-right a {
+  white-space: nowrap;
   font-family: var(--font-ui);
   font-size: 0.8125rem;
   font-weight: 500;
@@ -339,6 +340,14 @@ body::after {
 .nav__mobile-menu a:hover, .nav__mobile-menu a:active {
   color: var(--red);
   padding-left: 12px;
+}
+
+/* Tablet: six nav links + logo need ~885px; switch to the hamburger below that */
+@media (max-width: 900px) {
+  .nav__inner { grid-template-columns: 1fr auto auto; }
+  .nav__links-left, .nav__links-right { display: none; }
+  .nav__logo { justify-self: start; padding: 0; }
+  .nav__hamburger { display: flex; }
 }
 
 @media (max-width: 768px) {
@@ -1176,6 +1185,7 @@ body::after {
       <img src="pictures/mrdimsum-logo.png" alt="Mr. Dim Sum" class="nav__logo-img">
     </a>
     <ul class="nav__links-right">
+      <li><a href="https://pos.chowbus.com/online-ordering/store/MR.-DIM-SUM/50881" target="_blank" rel="noopener">Order Online</a></li>
       <li><a href="reservations.html">Reservations</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
@@ -1193,6 +1203,7 @@ body::after {
   <a href="#hero" onclick="closeMenu()">Home</a>
   <a href="menu.html" onclick="closeMenu()">Menu</a>
   <a href="about.html" onclick="closeMenu()">About</a>
+  <a href="https://pos.chowbus.com/online-ordering/store/MR.-DIM-SUM/50881" target="_blank" rel="noopener" onclick="closeMenu()">Order Online</a>
   <a href="reservations.html" onclick="closeMenu()">Reservations</a>
   <a href="contact.html" onclick="closeMenu()">Contact</a>
 </div>
@@ -1211,7 +1222,8 @@ body::after {
     </div>
     <p class="hero__sub">More than dim sum, it's a way of life.<br>Rooted in tradition, served with joy.</p>
     <div class="hero__ctas">
-      <a href="https://www.yelp.com/reservations/mr-dim-sum-tukwila-3" class="btn btn--gold" target="_blank" rel="noopener">Reserve Now</a>
+      <a href="https://pos.chowbus.com/online-ordering/store/MR.-DIM-SUM/50881" class="btn btn--gold" target="_blank" rel="noopener">Order Now</a>
+      <a href="https://www.yelp.com/reservations/mr-dim-sum-tukwila-3" class="btn btn--outline" target="_blank" rel="noopener">Reserve Now</a>
       <a href="menu.html" class="btn btn--outline">View Menu</a>
     </div>
   </div>
