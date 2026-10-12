@@ -149,6 +149,15 @@ body { font-size: 14px; }
   gap: 16px;
 }
 
+/* FORM ERROR */
+.form-error {
+  font-family: var(--font-ui);
+  font-size: 0.875rem;
+  color: var(--red);
+  margin-top: 12px;
+  min-height: 20px;
+}
+
 /* STAR RATING */
 .star-rating {
   display: flex;
@@ -436,6 +445,7 @@ body { font-size: 14px; }
     <ul class="nav__links-right">
       <li><a href="reservations.html">Reservations</a></li>
       <li><a href="contact.html">Contact</a></li>
+      <li class="nav__order-item"><a href="https://pos.chowbus.com/online-ordering/store/MR.-DIM-SUM/50881" class="nav__order" target="_blank" rel="noopener">Order Now</a></li>
     </ul>
     <button class="nav__hamburger" aria-label="Open menu" aria-expanded="false" onclick="toggleMenu()">
       <div class="nav__hamburger-lines">
@@ -451,6 +461,7 @@ body { font-size: 14px; }
   <a href="index.html" onclick="closeMenu()">Home</a>
   <a href="menu.html" onclick="closeMenu()">Menu</a>
   <a href="about.html" onclick="closeMenu()">About</a>
+  <a href="https://pos.chowbus.com/online-ordering/store/MR.-DIM-SUM/50881" target="_blank" rel="noopener" onclick="closeMenu()">Order Online</a>
   <a href="reservations.html" onclick="closeMenu()">Reservations</a>
   <a href="contact.html" onclick="closeMenu()">Contact</a>
   <a href="feedback.html" class="is-active" onclick="closeMenu()">Feedback</a>
@@ -475,7 +486,7 @@ body { font-size: 14px; }
           <p>Every response is read by our team. Be as honest as you'd like. This is how we get better.</p>
         </div>
 
-        <form id="feedbackForm">
+        <form id="feedbackForm" novalidate>
           <!-- Overall Rating -->
           <div class="form-group">
             <span class="star-rating-label">Overall Experience *</span>
@@ -625,6 +636,7 @@ body { font-size: 14px; }
           </div>
 
           <button type="submit" class="btn btn--gold" id="submitBtn">Submit Feedback</button>
+          <p class="form-error" id="feedbackError" role="alert"></p>
         </form>
 
         <!-- Success Message -->
@@ -726,6 +738,7 @@ body { font-size: 14px; }
   <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
 </button>
 
+<script src="forms.js"></script>
 <script>
 // Mobile menu
 function toggleMenu() {
@@ -776,52 +789,42 @@ document.querySelectorAll('#overallRating input').forEach(input => {
   });
 });
 
-// Form submission
-document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+// Form submission: goes to the restaurant's inbox in the Apnosh portal (forms.js)
+var feedbackForm = document.getElementById('feedbackForm');
+MDSForms.prepare(feedbackForm);
+feedbackForm.addEventListener('submit', function(e) {
   e.preventDefault();
-
-  // Collect form data
-  const formData = new FormData(this);
-  const data = {};
-  for (const [key, value] of formData.entries()) {
-    data[key] = value;
+  var errorBox = document.getElementById('feedbackError');
+  var btn = document.getElementById('submitBtn');
+  if (!feedbackForm.querySelector('input[name="overall"]:checked')) {
+    errorBox.textContent = 'Please choose an overall star rating.';
+    document.getElementById('overallRating').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+  var text = document.getElementById('feedbackText');
+  if (!text.value.trim()) {
+    errorBox.textContent = 'Please tell us a little about your visit.';
+    text.focus();
+    return;
+  }
+  var email = document.getElementById('feedbackEmail');
+  if (email.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+    errorBox.textContent = 'That email doesn\u2019t look right. Fix it or leave it blank.';
+    email.focus();
+    return;
   }
 
-  // Build email body
-  const lines = [];
-  lines.push('=== MR. DIM SUM | CUSTOMER FEEDBACK ===');
-  lines.push('');
-  if (data.overall) lines.push('Overall Rating: ' + '★'.repeat(data.overall) + '☆'.repeat(5 - data.overall) + ' (' + data.overall + '/5)');
-  if (data.food) lines.push('Food Quality: ' + '★'.repeat(data.food) + '☆'.repeat(5 - data.food));
-  if (data.service) lines.push('Service: ' + '★'.repeat(data.service) + '☆'.repeat(5 - data.service));
-  if (data.cleanliness) lines.push('Cleanliness: ' + '★'.repeat(data.cleanliness) + '☆'.repeat(5 - data.cleanliness));
-  if (data.ambiance) lines.push('Atmosphere: ' + '★'.repeat(data.ambiance) + '☆'.repeat(5 - data.ambiance));
-  lines.push('');
-  if (data.visit_date) lines.push('Visit Date: ' + data.visit_date);
-  if (data.dining_type) lines.push('Dining Type: ' + data.dining_type);
-  if (data.ordered) lines.push('Ordered: ' + data.ordered);
-  if (data.recommend) lines.push('Would Recommend: ' + data.recommend);
-  lines.push('');
-  lines.push('--- FEEDBACK ---');
-  lines.push(data.feedback || '');
-  lines.push('');
-  if (data.name) lines.push('Name: ' + data.name);
-  if (data.email) lines.push('Email: ' + data.email);
-  lines.push('');
-  lines.push('Submitted: ' + new Date().toLocaleString());
-
-  const subject = 'Customer Feedback' + (data.overall ? ' (' + data.overall + '/5 stars)' : '');
-  const body = encodeURIComponent(lines.join('\n'));
-
-  // Open mailto
-  window.location.href = 'mailto:info@mrdimsumusa.com?subject=' + encodeURIComponent(subject) + '&body=' + body;
-
-  // Show success
-  setTimeout(function() {
-    document.getElementById('feedbackForm').style.display = 'none';
+  errorBox.textContent = '';
+  btn.disabled = true;
+  btn.textContent = 'Sending\u2026';
+  MDSForms.send(feedbackForm, 'feedback', { source: 'Website feedback page' }).then(function(result) {
+    btn.disabled = false;
+    btn.textContent = 'Submit Feedback';
+    if (!result.ok) { errorBox.textContent = result.error; return; }
+    feedbackForm.style.display = 'none';
     document.querySelector('.feedback-card__intro').style.display = 'none';
     document.getElementById('feedbackSuccess').classList.add('is-visible');
-  }, 500);
+  });
 });
 
 function resetForm() {
@@ -830,6 +833,7 @@ function resetForm() {
   document.querySelector('.feedback-card__intro').style.display = '';
   document.getElementById('feedbackSuccess').classList.remove('is-visible');
   document.getElementById('ratingHint').textContent = '';
+  document.getElementById('feedbackError').textContent = '';
 }
 
 // Scroll-triggered reveal animations

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Review Table Card | Mr. Dim Sum</title>
+<!-- Printable 4x6 in table card for the in-store review QR code. Print at 100% scale. -->
+<link href="https://fonts.googleapis.com/css2?family=Italianno&family=Gowun+Batang:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+@page { size: 4in 6in; margin: 0; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #FFFCF3; }
+.card {
+  width: 4in; height: 6in;
+  background: #FFFCF3;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 0.35in 0.3in;
+  text-align: center;
+  border: 1px solid rgba(213,182,134,0.45);
+}
+.logo { width: 1.7in; margin-bottom: 0.18in; }
+h1 { font-family: 'Italianno', cursive; font-weight: 400; font-size: 46pt; line-height: 0.95; color: #3D2B1F; }
+.sub { font-family: 'Gowun Batang', Georgia, serif; font-size: 10.5pt; color: #5C4033; line-height: 1.35; margin: 0.08in 0 0.2in; }
+.qr { width: 2.1in; height: 2.1in; padding: 0.06in; background: #fff; border-radius: 10px; border: 1.5px solid #d5b686; }
+.qr img { width: 100%; height: 100%; display: block; }
+.scan { font-family: 'Inter', sans-serif; font-weight: 600; font-size: 9pt; letter-spacing: 0.14em; text-transform: uppercase; color: #3D2B1F; margin-top: 0.18in; }
+.url { font-family: 'Inter', sans-serif; font-size: 8.5pt; color: #6B7280; margin-top: 0.05in; }
+.private { font-family: 'Inter', sans-serif; font-size: 7.5pt; color: #b89b6a; margin-top: 0.14in; }
+</style>
+</head>
+<body>
+<div class="card">
+  <img class="logo" src="../pictures/mrdimsum-logo.png" alt="Mr. Dim Sum">
+  <h1>How was your visit?</h1>
+  <p class="sub">Tell us what you loved and what we can do better.</p>
+  <div class="qr"><img src="review-qr.png" alt="QR code to eat-mds.com/review"></div>
+  <p class="scan">Scan to leave a review</p>
+  <p class="url">eat-mds.com/review</p>
+  <p class="private">Private &middot; Goes straight to our team</p>
+</div>
+</body>
+</html>

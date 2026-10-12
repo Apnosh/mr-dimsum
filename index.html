@@ -210,6 +210,7 @@ body::after {
 .nav__links-right { justify-content: flex-start; }
 
 .nav__links-left a, .nav__links-right a {
+  white-space: nowrap;
   font-family: var(--font-ui);
   font-size: 0.8125rem;
   font-weight: 500;
@@ -339,6 +340,30 @@ body::after {
 .nav__mobile-menu a:hover, .nav__mobile-menu a:active {
   color: var(--red);
   padding-left: 12px;
+}
+
+/* Order Now pill, far right of the desktop nav */
+.nav__links-right { align-items: center; }
+.nav__links-right .nav__order-item { margin-left: auto; }
+.nav__links-right a.nav__order,
+.nav.is-solid .nav__links-right a.nav__order {
+  display: inline-block;
+  padding: 10px 22px;
+  border-radius: 999px;
+  background: #D4B483;
+  color: #fff;
+  opacity: 1;
+  transition: background 0.3s, transform 0.3s;
+}
+.nav__links-right a.nav__order::after { display: none; }
+.nav__links-right a.nav__order:hover { background: #C29C62; opacity: 1; transform: translateY(-1px); }
+
+/* Tablet: nav links + logo + Order Now need ~910px; switch to the hamburger below that */
+@media (max-width: 940px) {
+  .nav__inner { grid-template-columns: 1fr auto auto; }
+  .nav__links-left, .nav__links-right { display: none; }
+  .nav__logo { justify-self: start; padding: 0; }
+  .nav__hamburger { display: flex; }
 }
 
 @media (max-width: 768px) {
@@ -1178,6 +1203,7 @@ body::after {
     <ul class="nav__links-right">
       <li><a href="reservations.html">Reservations</a></li>
       <li><a href="contact.html">Contact</a></li>
+      <li class="nav__order-item"><a href="https://pos.chowbus.com/online-ordering/store/MR.-DIM-SUM/50881" class="nav__order" target="_blank" rel="noopener">Order Now</a></li>
     </ul>
     <button class="nav__hamburger" aria-label="Open menu" aria-expanded="false" onclick="toggleMenu()">
       <div class="nav__hamburger-lines">
@@ -1193,6 +1219,7 @@ body::after {
   <a href="#hero" onclick="closeMenu()">Home</a>
   <a href="menu.html" onclick="closeMenu()">Menu</a>
   <a href="about.html" onclick="closeMenu()">About</a>
+  <a href="https://pos.chowbus.com/online-ordering/store/MR.-DIM-SUM/50881" target="_blank" rel="noopener" onclick="closeMenu()">Order Online</a>
   <a href="reservations.html" onclick="closeMenu()">Reservations</a>
   <a href="contact.html" onclick="closeMenu()">Contact</a>
 </div>
