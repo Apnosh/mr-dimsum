@@ -32,7 +32,8 @@
   function send(form, kind, extra) {
     var data = new URLSearchParams();
     new FormData(form).forEach(function (value, key) {
-      if (typeof value === 'string') data.append(key, value.trim());
+      /* skip blanks (optional fields left empty), but keep the bot trap even when empty */
+      if (typeof value === 'string' && (value.trim() || key === '_gotcha')) data.append(key, value.trim());
     });
     Object.keys(extra || {}).forEach(function (key) { data.append(key, extra[key]); });
     data.set('_ts', String(openedAt));
