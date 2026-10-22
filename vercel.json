@@ -1,4 +1,6 @@
 {
+  "buildCommand": "node build/apnosh-hours.mjs",
+  "outputDirectory": ".",
   "rewrites": [
     { "source": "/review", "destination": "/review.html" }
   ]
