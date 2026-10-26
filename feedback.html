@@ -526,6 +526,9 @@ body { font-size: 14px; }
             <div class="star-rating-hint" id="ratingHint"></div>
           </div>
 
+          <!-- The survey's questions. The owner keeps them in the Apnosh portal (Your questions); forms.js draws
+               theirs here. What is below is the fallback: it stays when Apnosh can't be reached. -->
+          <div data-apnosh-questions="feedback">
           <!-- Category Ratings -->
           <div class="form-group">
             <span class="star-rating-label">Rate Each Area</span>
@@ -573,32 +576,19 @@ body { font-size: 14px; }
             </div>
           </div>
 
-          <!-- Visit Details -->
-          <div class="form-row">
-            <div class="form-group">
-              <label for="visitDate">Date of Visit</label>
-              <input type="date" id="visitDate" name="visit_date">
-            </div>
-            <div class="form-group">
-              <label for="diningType">Dining Type</label>
-              <select id="diningType" name="dining">
-                <option value="" disabled selected>Select one</option>
-                <option value="Dine in">Dine In</option>
-                <option value="Takeout">Takeout</option>
-              </select>
-            </div>
+          <!-- Dining type -->
+          <div class="form-group">
+            <label for="diningType">Dining Type</label>
+            <select id="diningType" name="dining">
+              <option value="" disabled selected>Select one</option>
+              <option value="Dine in">Dine In</option>
+              <option value="Takeout">Takeout</option>
+            </select>
           </div>
-
           <!-- What did you order -->
           <div class="form-group">
             <label for="ordered">What Did You Order?</label>
             <input type="text" id="ordered" name="ordered" placeholder="e.g. Har Gow, Siu Mai, Beef Chow Fun...">
-          </div>
-
-          <!-- Detailed Feedback -->
-          <div class="form-group">
-            <label for="feedbackText">Your Feedback *</label>
-            <textarea id="feedbackText" name="message" required placeholder="What did you love? What could we improve? Be specific. We read every word."></textarea>
           </div>
 
           <!-- Would you recommend -->
@@ -627,6 +617,20 @@ body { font-size: 14px; }
                 </label>
               </div>
             </div>
+          </div>
+
+          </div>
+
+          <!-- Visit date -->
+          <div class="form-group">
+            <label for="visitDate">Date of Visit</label>
+            <input type="date" id="visitDate" name="visit_date">
+          </div>
+
+          <!-- Detailed Feedback -->
+          <div class="form-group">
+            <label for="feedbackText">Your Feedback *</label>
+            <textarea id="feedbackText" name="message" required placeholder="What did you love? What could we improve? Be specific. We read every word."></textarea>
           </div>
 
           <!-- Name & Email (optional) -->
@@ -805,6 +809,7 @@ document.querySelectorAll('#overallRating input').forEach(input => {
 // Form submission: goes to the restaurant's inbox in the Apnosh portal (forms.js)
 var feedbackForm = document.getElementById('feedbackForm');
 MDSForms.prepare(feedbackForm);
+MDSForms.questions();
 feedbackForm.addEventListener('submit', function(e) {
   e.preventDefault();
   var errorBox = document.getElementById('feedbackError');
@@ -812,6 +817,11 @@ feedbackForm.addEventListener('submit', function(e) {
   if (!feedbackForm.querySelector('input[name="rating"]:checked')) {
     errorBox.textContent = 'Please choose an overall star rating.';
     document.getElementById('overallRating').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+  var missing = MDSForms.missing(feedbackForm);
+  if (missing.length) {
+    errorBox.textContent = 'Please answer: ' + missing.join(', ');
     return;
   }
   var text = document.getElementById('feedbackText');

@@ -193,6 +193,9 @@
       </div>
       <div class="rating-hint" id="ratingHint" aria-live="polite">Tap a star to rate</div>
 
+      <!-- The survey's questions. The owner keeps them in the Apnosh portal (Your questions); forms.js draws theirs
+           here. What is below is the fallback: it stays when Apnosh can't be reached. -->
+      <div data-apnosh-questions="review">
       <div class="review-section">
         <span class="review-label">Rate the details <span>(optional)</span></span>
         <div class="detail-row">
@@ -233,6 +236,8 @@
           <input type="radio" id="dineIn" name="dining" value="Dine in"><label for="dineIn">Dine in</label>
           <input type="radio" id="takeout" name="dining" value="Takeout"><label for="takeout">Takeout</label>
         </div>
+      </div>
+
       </div>
 
       <div class="review-section">
@@ -327,6 +332,7 @@ var errorBox = document.getElementById('reviewError');
 var HINTS = { 1: 'Poor', 2: 'Fair', 3: 'Good', 4: 'Great', 5: 'Excellent' };
 
 MDSForms.prepare(form);
+MDSForms.questions();
 
 form.querySelectorAll('input[name="rating"]').forEach(function (input) {
   input.addEventListener('change', function () {
@@ -340,6 +346,11 @@ form.addEventListener('submit', function (e) {
   if (!form.querySelector('input[name="rating"]:checked')) {
     errorBox.textContent = 'Please tap a star rating first.';
     form.querySelector('.stars--big').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+  var missing = MDSForms.missing(form);
+  if (missing.length) {
+    errorBox.textContent = 'Please answer: ' + missing.join(', ');
     return;
   }
   var email = form.querySelector('input[name="email"]');
