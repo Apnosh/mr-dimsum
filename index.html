@@ -3,6 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#672015">
 <title>Mr. Dim Sum | Handmade Cantonese Dim Sum | Tukwila, WA</title>
 <meta name="description" content="Mr. Dim Sum serves authentic handmade Cantonese dim sum all day at Westfield Southcenter Mall in Tukwila, WA. Fresh dumplings, steamed buns, rice rolls, congee & noodles. Walk-ins welcome, reservations for 8-16 guests.">
 <link rel="canonical" href="https://www.eat-mds.com/">
@@ -10,7 +15,9 @@
 <!-- Open Graph -->
 <meta property="og:title" content="Mr. Dim Sum | Handmade Cantonese Dim Sum | Tukwila, WA">
 <meta property="og:description" content="Authentic handmade Cantonese dim sum served all day at Westfield Southcenter Mall in Tukwila, WA. Fresh dumplings, steamed buns, rice rolls, congee and noodles.">
-<meta property="og:image" content="https://www.eat-mds.com/pictures/Photo_TableSpread_MrDimSum_2026-03-11_v03.jpg">
+<meta property="og:image" content="https://www.eat-mds.com/pictures/share/home.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta property="og:url" content="https://www.eat-mds.com/">
 <meta property="og:type" content="restaurant">
 <meta property="og:site_name" content="Mr. Dim Sum">
@@ -19,7 +26,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Mr. Dim Sum | Handmade Cantonese Dim Sum | Tukwila, WA">
 <meta name="twitter:description" content="Authentic handmade Cantonese dim sum served all day at Westfield Southcenter Mall in Tukwila, WA. Fresh dumplings, steamed buns, rice rolls, congee and noodles.">
-<meta name="twitter:image" content="https://www.eat-mds.com/pictures/Photo_TableSpread_MrDimSum_2026-03-11_v03.jpg">
+<meta name="twitter:image" content="https://www.eat-mds.com/pictures/share/home.jpg">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,7 +37,15 @@
   "@context": "https://schema.org",
   "@type": "Restaurant",
   "name": "Mr. Dim Sum",
-  "image": "pictures/MrDimSum_Photo_InteriorSeating_2025-05-21_v27.jpg",
+  "@id": "https://www.eat-mds.com/#restaurant",
+  "image": [
+    "https://www.eat-mds.com/pictures/share/home.jpg",
+    "https://www.eat-mds.com/pictures/share/reservations.jpg",
+    "https://www.eat-mds.com/pictures/share/contact.jpg"
+  ],
+  "logo": "https://www.eat-mds.com/icon-512.png",
+  "sameAs": ["https://instagram.com/mrdimsumusa"],
+  "hasMap": "https://maps.google.com/?q=973+Southcenter+Mall+Tukwila+WA+98188",
   "servesCuisine": "Cantonese",
   "priceRange": "$$",
   "address": {
@@ -48,7 +63,7 @@
   },
   "url": "https://www.eat-mds.com/",
   "email": "info@mrdimsumusa.com",
-  "menu": "https://www.eat-mds.com/menu.html",
+  "menu": "https://www.eat-mds.com/menu",
   "acceptsReservations": "True",
   "openingHoursSpecification": [
     {
@@ -1198,15 +1213,15 @@ body::after {
   <div class="nav__inner">
     <ul class="nav__links-left">
       <li><a href="#hero">Home</a></li>
-      <li><a href="menu.html">Menu</a></li>
-      <li><a href="about.html">About</a></li>
+      <li><a href="/menu">Menu</a></li>
+      <li><a href="/about">About</a></li>
     </ul>
     <a href="#" class="nav__logo" aria-label="Mr. Dim Sum, Home">
       <img src="pictures/mrdimsum-logo.png" alt="Mr. Dim Sum" class="nav__logo-img">
     </a>
     <ul class="nav__links-right">
-      <li><a href="reservations.html">Reservations</a></li>
-      <li><a href="contact.html">Contact</a></li>
+      <li><a href="/reservations">Reservations</a></li>
+      <li><a href="/contact">Contact</a></li>
       <li class="nav__order-item"><a href="https://pos.chowbus.com/online-ordering/store/MR.-DIM-SUM/50881" class="nav__order" target="_blank" rel="noopener">Order Now</a></li>
     </ul>
     <button class="nav__hamburger" aria-label="Open menu" aria-expanded="false" onclick="toggleMenu()">
@@ -1221,11 +1236,11 @@ body::after {
 <div class="nav__mobile-overlay" id="mobileOverlay" onclick="closeMenu()"></div>
 <div class="nav__mobile-menu" id="mobileMenu">
   <a href="#hero" onclick="closeMenu()">Home</a>
-  <a href="menu.html" onclick="closeMenu()">Menu</a>
-  <a href="about.html" onclick="closeMenu()">About</a>
+  <a href="/menu" onclick="closeMenu()">Menu</a>
+  <a href="/about" onclick="closeMenu()">About</a>
   <a href="https://pos.chowbus.com/online-ordering/store/MR.-DIM-SUM/50881" target="_blank" rel="noopener" onclick="closeMenu()">Order Online</a>
-  <a href="reservations.html" onclick="closeMenu()">Reservations</a>
-  <a href="contact.html" onclick="closeMenu()">Contact</a>
+  <a href="/reservations" onclick="closeMenu()">Reservations</a>
+  <a href="/contact" onclick="closeMenu()">Contact</a>
 </div>
 
 <!-- HERO -->
@@ -1243,7 +1258,7 @@ body::after {
     <p class="hero__sub">More than dim sum, it's a way of life.<br>Rooted in tradition, served with joy.</p>
     <div class="hero__ctas">
       <a href="https://www.yelp.com/reservations/mr-dim-sum-tukwila-3" class="btn btn--gold" target="_blank" rel="noopener">Reserve Now</a>
-      <a href="menu.html" class="btn btn--outline">View Menu</a>
+      <a href="/menu" class="btn btn--outline">View Menu</a>
     </div>
   </div>
   <a href="#menu" class="hero__scroll" aria-label="Scroll to content">
@@ -1268,7 +1283,7 @@ body::after {
         </div>
       </div>
       <div class="menu-card reveal reveal-d2">
-        <img src="pictures/entreecropped.png" alt="Beef chow fun with wide rice noodles" loading="lazy">
+        <img src="pictures/entreecropped.jpg" alt="Beef chow fun with wide rice noodles" loading="lazy">
         <div class="menu-card__overlay">
           <span class="menu-card__title">Entrees</span>
           <span class="menu-card__count">Rice plates, noodles, congee</span>
@@ -1283,7 +1298,7 @@ body::after {
       </div>
     </div>
     <div class="menu-full-link reveal">
-      <a href="menu.html" class="btn btn--gold">View full menu</a>
+      <a href="/menu" class="btn btn--gold">View full menu</a>
       <a href="https://www.yelp.com/reservations/mr-dim-sum-tukwila-3" class="btn btn--dark" target="_blank" rel="noopener">Reserve now</a>
     </div>
   </div>
@@ -1330,7 +1345,7 @@ body::after {
       </div>
       <div class="visit-card reveal reveal-d4">
         <h3>Contact</h3>
-        <p><a href="mailto:info@mrdimsumusa.com">info@mrdimsumusa.com</a><br><a href="https://instagram.com/mrdimsumusa" target="_blank" rel="noopener">@mrdimsumusa</a></p>
+        <p><a href="mailto:info@mrdimsumusa.com">info@mrdimsumusa.com</a></p>
       </div>
     </div>
   </div>
@@ -1344,7 +1359,7 @@ body::after {
       <p class="section__label">Our story</p>
       <h2 class="section__title">Authentic Flavors</h2>
       <p class="section__desc">Mr. Dim Sum was born from a passion for sharing authentic Cantonese flavors in a modern way. Our founders, with roots in both traditional dim sum kitchens and fast-paced restaurant operations, saw an opportunity to bring handcrafted dim sum to a new generation of diners, without compromising quality or culture.</p>
-      <a href="about.html" class="btn btn--gold">Read more</a>
+      <a href="/about" class="btn btn--gold">Read more</a>
     </div>
   </div>
 </section>
@@ -1374,11 +1389,11 @@ body::after {
         <h4>Navigate</h4>
         <ul>
           <li><a href="#hero">Home</a></li>
-          <li><a href="menu.html">Menu</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="reservations.html">Reservations</a></li>
-          <li><a href="contact.html">Contact</a></li>
-          <li><a href="feedback.html">Feedback</a></li>
+          <li><a href="/menu">Menu</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/reservations">Reservations</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/feedback">Feedback</a></li>
         </ul>
       </div>
       <div>
