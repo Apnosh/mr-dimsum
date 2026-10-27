@@ -547,3 +547,5 @@ button:focus-visible,
   stroke-linejoin: round;
 }
 
+/* Tap targets: text links in the footer, contact cards and map lines are at least 24px tall (WCAG 2.2 target size) */
+.footer ul a, .footer p a, .visit-card a, .quick-info__value a, a[href^="https://maps.google.com"] { display: inline-flex; align-items: center; min-height: 24px; }
