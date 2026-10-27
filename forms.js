@@ -42,7 +42,11 @@
     return fetch(ENDPOINT + '?kind=' + encodeURIComponent(kind), { method: 'POST', body: data })
       .then(function (res) {
         return res.json().catch(function () { return {}; }).then(function (body) {
-          if (res.ok) return { ok: true };
+          if (res.ok) {
+            /* tell Analytics (the Apnosh tag's gtag) a guest sent a form, so inquiries can be traced to where they came from */
+            if (typeof window.gtag === 'function') window.gtag('event', 'generate_lead', { form_type: kind, transport_type: 'beacon' });
+            return { ok: true };
+          }
           return { ok: false, error: body.error || 'Something went wrong. Please try again.' };
         });
       })
